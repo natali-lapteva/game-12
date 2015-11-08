@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="style.css"/>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+    <script type="text/javascript" src="script.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="title">Игра в "12"</div>
+        <button type="button" name="oneMore" onclick="oneMore()">Ещё один бросок</button>
+        <button type="button" name="finish" onclick="finish()">Завершить ход</button>
+        <button type="button" name="clean" onclick="clean()">Играть еще разок</button>
+        <div class="player">
+            Вы:
+            <span id='player'></span>
+        </div>
+        <div class="comp">
+            Противник:
+            <span id='computer'></span>
+        </div>
+        <div id="result"></div>
+    </div>
+</body>
+</html>
