@@ -202,31 +202,35 @@
             return;
         }
 
-        var computerSum = sum(computerTryes);
-        var result = '';
+        var result = getResult(playerSum, sum(computerTryes));
+        $('#result').text(result);
+    }
 
-        // Если игрок выбросил слишком много или компьютер выбросил больше,
-        // считаем что игрок проиграл
-        if (playerSum >= VIN_NUMBER || computerSum > playerSum) {
-            result = 'Вы проиграли... :-('
-        } else
-
-        // Если противник выбросил слишком много или игрок выбросил больше,
-        // считаем что игрок - чемпион!
-        if (computerSum >= VIN_NUMBER || computerSum < playerSum) {
-            result = 'Поздравляю! Вы выйграли! :-)'
-        }
-
+    function getResult(playerSum, computerSum) {
         // Если оба выбросили слишком много или одинаковое число,
         // считаем, что итог - ничья
         if (
                 (computerSum >= VIN_NUMBER && playerSum >= VIN_NUMBER) ||
                 computerSum === playerSum
         ) {
-            result = 'Интрига-интрига! Пока ничья'
+            return 'Интрига-интрига! Пока ничья'
         }
 
-        $('#result').text(result);
+        var loose = 'Вы проиграли... :-(';
+        var vin = 'Поздравляю! Вы выйграли! :-)';
+
+        // Если игрок кинул слишком много, то он проиграл
+        if (playerSum >= VIN_NUMBER) {
+            return loose;
+        }
+
+        // Если противник кинул слишком много, то он проиграл
+        if (computerSum >= VIN_NUMBER) {
+            return   vin;
+        }
+
+        // Кто больше выбросил, тот и победил
+        return playerSum > computerSum ? vin : loose;
     }
 </script>
 </body>
