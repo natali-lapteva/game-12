@@ -2,27 +2,232 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
-    <link rel="stylesheet" href="style.css"/>
+    <title>Игра в "12"</title>
+    <link rel="shortcut icon"
+          href="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/12NumberTwelveInCircle.png/120px-12NumberTwelveInCircle.png">
     <script type="text/javascript" src="jquery.min.js"></script>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
-    <script type="text/javascript" src="script.js"></script>
+    <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>-->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .wrapper {
+            font-family: 'Tahoma', serif;
+        }
+        .title {
+            color: steelblue;
+            text-align: center;
+            padding-bottom: 10px;
+            font-size: 50px;
+            border-bottom: 1px solid grey;
+            background: #f7f7f7; /* Old browsers */
+            background: -moz-linear-gradient(top, #f7f7f7 0%, #ffffff 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f7f7f7), color-stop(100%, #ffffff)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top, #f7f7f7 0%, #ffffff 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top, #f7f7f7 0%, #ffffff 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top, #f7f7f7 0%, #ffffff 100%); /* IE10+ */
+            background: linear-gradient(to bottom, #f7f7f7 0%, #ffffff 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f7f7', endColorstr='#ffffff', GradientType=0); /* IE6-9 */
+        }
+        button {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            margin-right: 10px;
+            font-size: 17px;
+            border-radius: 3px;
+            height: 30px;
+            width: 170px;
+            border: 1px solid #666;
+            padding: 6px 10px;
+            -webkit-border-radius: 2px 2px;
+            border: solid 1px rgb(153, 153, 153);
+            background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(255, 255, 255)), to(rgb(221, 221, 221)));
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+            text-shadow: 0px 1px 1px rgba(255, 255, 255, 1);
+            line-height: 1;
+
+        }
+
+        .buttons {
+            text-align: center;
+        }
+        .player, #player, .comp, #computer, #result {
+            font-size: 23px;
+            color: #2e2e39;
+        }
+        #player, #computer, #result {
+            text-align: left;
+        }
+        #result {
+            line-height: 2;
+            text-align: center;
+            margin-top: 20px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+            height: 50px;;
+        }
+    </style>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="title">Игра в "12"</div>
-        <button type="button" name="oneMore" onclick="oneMore()">Ещё один бросок</button>
+<div class="wrapper">
+    <div class="title">Игра в "12"</div>
+    <div class="buttons">
+        <button type="button" name="oneMore" onclick="oneMore()">Сделать бросок</button>
         <button type="button" name="finish" onclick="finish()">Завершить ход</button>
-        <button type="button" name="clean" onclick="clean()">Играть еще разок</button>
-        <div class="player">
-            Вы:
-            <span id='player'></span>
-        </div>
-        <div class="comp">
-            Противник:
-            <span id='computer'></span>
-        </div>
-        <div id="result"></div>
+        <button type="button" name="clean" onclick="clean()">Играть ещё раз</button>
     </div>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <div class="player">
+                        Вы:
+                        <td><span id='player'></span></td>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="comp">
+                        Противник:
+                        <td><span id='computer'></span></td>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="result"></div>
+</div>
+<script type="text/javascript">
+    // Максимальное количество бросаний кубика
+    var MAX_TRY = 3;
+
+    // Выйгрышное число, к которому надо подойти максимально близко
+    var VIN_NUMBER = 12;
+
+    // Максимальное число которое может выпасть на кубике
+    var MAX_NUMBER = 6;
+
+    // Сюда записываем ходы игрока
+    var playerTryes = [];
+
+    /**
+     * Сбрасываем игровой процесс
+     *    - очищаем ходы игрока
+     *    - удаляем все информационные сообщения
+     */
+    function clean() {
+        playerTryes = [];
+        $('#player').text('');
+        $('#computer').text('');
+        $('#result').text('');
+    }
+
+    /**
+     * Ход игрока
+     */
+    function oneMore() {
+        // Если игрок пытается бросить кубик больше дозволенного,
+        // предупреждаем его и завершаем код
+        if (playerTryes.length >= MAX_TRY) {
+            alert('К сожалению, кубик можно бросить не более ' + MAX_TRY + ' раз');
+            return;
+        }
+
+        // Бросаем кубик, запоминаем результат
+        playerTryes.push(getNumber());
+
+        // Показываем сумму бросаний игрока
+        showSum('player', playerTryes);
+
+        // Показывем результат партии
+        showResult(playerTryes)
+    }
+
+    /**
+     * Ход противника
+     */
+    function finish() {
+        // Здесь хранятся ходы противника
+        var computerTryes = [];
+
+        // Бросаем кубик пока можем, стараясь не превысить выйгрышное число
+        while (computerTryes.length < MAX_TRY && sum(computerTryes) < VIN_NUMBER - MAX_NUMBER / 2) {
+            computerTryes.push(getNumber());
+        }
+
+        // Показываем сумму бросаний противника
+        showSum('computer', computerTryes);
+
+        // Показывем результат партии
+        showResult(playerTryes, computerTryes);
+    }
+
+
+    /**
+     * Бросание кубика
+     */
+    function getNumber() {
+        return Math.round(Math.random() * 6 + 0.5)
+    }
+
+    /**
+     * Показываем сумму бросаний
+     */
+    function showSum(id, values) {
+        var value = values.join(' + ') + ' = ' + sum(values);
+        $('#' + id).text(value);
+    }
+
+    /**
+     * Вычисление суммы бросаний
+     */
+    function sum(array) {
+        array = array || [];
+        return array.reduce(function (acc, item) {
+            return acc + item;
+        }, 0);
+    }
+
+    /**
+     * Показывем результат партии
+     */
+    function showResult(playerTryes, computerTryes) {
+        var playerSum = sum(playerTryes);
+        if (playerSum < VIN_NUMBER && !computerTryes) {
+            return;
+        }
+
+        var computerSum = sum(computerTryes);
+        var result = '';
+
+        // Если игрок выбросил слишком много или компьютер выбросил больше,
+        // считаем что игрок проиграл
+        if (playerSum >= VIN_NUMBER || computerSum > playerSum) {
+            result = 'Вы проиграли... :-('
+        } else
+
+        // Если противник выбросил слишком много или игрок выбросил больше,
+        // считаем что игрок - чемпион!
+        if (computerSum >= VIN_NUMBER || computerSum < playerSum) {
+            result = 'Поздравляю! Вы выйграли! :-)'
+        }
+
+        // Если оба выбросили слишком много или одинаковое число,
+        // считаем, что итог - ничья
+        if (
+                (computerSum >= VIN_NUMBER && playerSum >= VIN_NUMBER) ||
+                computerSum === playerSum
+        ) {
+            result = 'Интрига-интрига! Пока ничья'
+        }
+
+        $('#result').text(result);
+    }
+</script>
 </body>
 </html>
