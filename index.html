@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="">
 <head>
     <meta charset="UTF-8">
     <title>Игра в "12"</title>
@@ -12,9 +12,11 @@
             margin: 0;
             padding: 0;
         }
+
         .wrapper {
             font-family: 'Tahoma', serif;
         }
+
         .title {
             color: steelblue;
             text-align: center;
@@ -29,7 +31,9 @@
             background: -ms-linear-gradient(top, #f7f7f7 0%, #ffffff 100%); /* IE10+ */
             background: linear-gradient(to bottom, #f7f7f7 0%, #ffffff 100%); /* W3C */
             filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f7f7', endColorstr='#ffffff', GradientType=0); /* IE6-9 */
+            border-radius: 4px;
         }
+
         button {
             margin-top: 15px;
             margin-bottom: 15px;
@@ -38,7 +42,6 @@
             border-radius: 3px;
             height: 30px;
             width: 170px;
-            border: 1px solid #666;
             padding: 6px 10px;
             -webkit-border-radius: 2px 2px;
             border: solid 1px rgb(153, 153, 153);
@@ -48,7 +51,7 @@
             cursor: pointer;
             display: inline-block;
             text-align: center;
-            text-shadow: 0px 1px 1px rgba(255, 255, 255, 1);
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 1);
             line-height: 1;
 
         }
@@ -56,19 +59,23 @@
         .buttons {
             text-align: center;
         }
-        .player, #player, .comp, #computer, #result {
+
+        .player, #player, .comp, #computer, #result, td {
             font-size: 23px;
             color: #2e2e39;
         }
-        #player, #computer, #result {
-            text-align: left;
+
+        td {
+            padding-left: 15px;
         }
+
         #result {
             line-height: 2;
             text-align: center;
             margin-top: 20px;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-            height: 50px;;
+            height: 50px;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -82,22 +89,19 @@
     </div>
     <div>
         <table>
-            <tr>
-                <td>
-                    <div class="player">
-                        Вы:
-                        <td><span id='player'></span></td>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="comp">
-                        Противник:
-                        <td><span id='computer'></span></td>
-                    </div>
-                </td>
-            </tr>
+
+            <div class="player">
+                <tr>
+                    <td>Вы:</td>
+                    <td><span id='player'></span></td>
+                </tr>
+            </div>
+            <div class="comp">
+                <tr>
+                    <td>Противник:</td>
+                    <td><span id='computer'></span></td>
+                </tr>
+            </div>
         </table>
     </div>
     <div id="result"></div>
@@ -226,7 +230,7 @@
 
         // Если противник кинул слишком много, то он проиграл
         if (computerSum >= VIN_NUMBER) {
-            return   vin;
+            return vin;
         }
 
         // Кто больше выбросил, тот и победил
